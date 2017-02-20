@@ -38,8 +38,8 @@ Canvas.prototype.createRenderer = function(){
 Canvas.prototype.createCamera = function(){
 	this.camera = new THREE.PerspectiveCamera(75,this.canvasContainer.clientWidth/this.canvasContainer.clientHeight,1, 1000);
 	this.camera.position.x = -10;
-	this.camera.position.y = 60;
-	this.camera.position.z = 150;
+	this.camera.position.y = 100;
+	this.camera.position.z = 200;
 	this.camera.lookAt(new THREE.Vector3(0,0,0));
 }
 
