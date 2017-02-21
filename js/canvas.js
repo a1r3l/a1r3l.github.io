@@ -4,7 +4,8 @@ function Canvas(){
 	this.canvasContainer = null;
 	this.renderer = null;
 	this.camera = null;
-	this.scene = null;	
+	this.scene = null;
+	this.control = null;	
 };
 
 Canvas.prototype.init = function(){
@@ -15,8 +16,14 @@ Canvas.prototype.init = function(){
 	this.createRenderer();
 	this.createCamera();
 	this.createPlane();
+	this.createAcera();
+	this.createStreet();
 	this.createFrontWall();
 	//this.createBuilding();
+
+
+
+	this.createSkybox();
 	this.createLight(this.camera.position.x,this.camera.position.y,this.camera.position.z);
 
 	this.canvasContainer.appendChild(this.renderer.domElement);
@@ -25,6 +32,7 @@ Canvas.prototype.init = function(){
 //Funcion para crear la escena de nuestro mundo 3D
 Canvas.prototype.createScene = function(){
 	this.scene = new THREE.Scene();
+	this.scene.fog = new Fog(0x9c9c9c , 100,1000);
 }
 
 //Funcion para crear el renderer del mundo 3D
@@ -41,10 +49,12 @@ Canvas.prototype.createCamera = function(){
 	this.camera.position.y = 100;
 	this.camera.position.z = 200;
 	this.camera.lookAt(new THREE.Vector3(0,0,0));
+
+	control = new THREE.OrbitControls(this.camera,this.renderer.domElement);
 }
 
 Canvas.prototype.createLight = function(x,y,z){
-	var light = new THREE.PointLight(0xffffff,1,500,1);
+	var light = new THREE.PointLight(0xffffff,1,0,1);
 	light.position.set(x,y,z)
 	this.scene.add(light);
 }
@@ -56,7 +66,7 @@ Canvas.prototype.renderCanvas = function(){
 }
 
 Canvas.prototype.createPlane = function(){
-	var geometry = new THREE.CubeGeometry(1000,3,1000);
+	var geometry = new THREE.CubeGeometry(2000,3,2000);
 	var texture = new THREE.ImageUtils.loadTexture('imgs/ground.jpg');
 	var material = new THREE.MeshPhongMaterial({map: texture});
 	var plane = new THREE.Mesh(geometry,material);
@@ -64,8 +74,79 @@ Canvas.prototype.createPlane = function(){
 	this.scene.add(plane);
 }
 
+Canvas.prototype.createAcera = function(){
+	var geometry = new THREE.CubeGeometry(600,14,70);
+	var texture = new THREE.ImageUtils.loadTexture('imgs/baldosa.jpg');
+
+	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+	texture.repeat.set( 60, 8);
+
+	var material = new THREE.MeshPhongMaterial({map: texture});
+	var plane = new THREE.Mesh(geometry,material);
+	plane.position.y += 1;
+	plane.position.z += 35; 
+	
+	var texture2 = new THREE.ImageUtils.loadTexture('imgs/baldosa.jpg');
+	texture2.wrapS = texture2.wrapT = THREE.RepeatWrapping;
+	texture2.repeat.set( 8, 60);
+	var material2 = new THREE.MeshPhongMaterial({map: texture2});
+	
+	var geometry1 = new THREE.CubeGeometry(50,14,600);
+	var left = new THREE.Mesh(geometry1,material2);
+	left.position.set(-275,1,-300);
+
+	var right = new THREE.Mesh(geometry1,material2);
+	right.position.set(275,1,-300);
+
+	this.scene.add(left);
+	this.scene.add(right);
+	this.scene.add(plane);
+}
+
+Canvas.prototype.createStreet = function(){
+	
+	//CARRETERA HORIZONTAL
+	var geometry = new THREE.CubeGeometry(600,7,100);
+	var texture = new THREE.ImageUtils.loadTexture('imgs/carretera.jpg');
+	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+	texture.repeat.set( 5, 1);
+	var material = new THREE.MeshPhongMaterial({map: texture});
+	var plane = new THREE.Mesh(geometry,material);
+	plane.position.y += 1;
+	plane.position.z += 120;  
+	
+	//ESQUINAS DEL MAPA
+	var cornerGeometry = new THREE.CubeGeometry(100,7,100);
+	var cornerTexture = new THREE.ImageUtils.loadTexture('imgs/esq_drch.jpg');
+	var cornerMaterial = new THREE.MeshPhongMaterial({map: cornerTexture});
+	var rightCorner  = new THREE.Mesh(cornerGeometry,cornerMaterial);
+	rightCorner.position.set(-350,1,120);
+	var cornerTextDer = THREE.ImageUtils.loadTexture('imgs/esq_izq.jpg');
+	var cornerMaterial2 = new THREE.MeshPhongMaterial({map: cornerTextDer});
+	var leftCorner  = new THREE.Mesh(cornerGeometry,cornerMaterial2);
+	leftCorner.position.set(350,1,120);
+
+	//CARETRAS PARALELAS HACIA DENTRO
+	var sideStrets = new THREE.CubeGeometry(100,7,600);
+	var texture2 = new THREE.ImageUtils.loadTexture('imgs/carretera_up.jpg');
+	texture2.wrapS = texture2.wrapT = THREE.RepeatWrapping;
+	texture2.repeat.set( 1, 5);
+	var material2 = new THREE.MeshPhongMaterial({map: texture2});
+	leftStreet = new THREE.Mesh(sideStrets,material2);
+	rightStreet = new THREE.Mesh(sideStrets,material2);
+
+	leftStreet.position.set(350,1,-230);
+	rightStreet.position.set(-350,1,-230);
+
+	this.scene.add(leftStreet);
+	this.scene.add(rightStreet);
+	this.scene.add(leftCorner);
+	this.scene.add(rightCorner);
+	this.scene.add(plane);
+}
+
 Canvas.prototype.createFrontWall = function(){
-	var geometry = new THREE.CubeGeometry(300,50,3);
+	var geometry = new THREE.CubeGeometry(500,50,3);
 	var texture = new THREE.ImageUtils.loadTexture('imgs/wall.3.jpg');
 	
 	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
@@ -73,31 +154,36 @@ Canvas.prototype.createFrontWall = function(){
 
 	var material = new THREE.MeshPhongMaterial({map: texture});
 	var wall = new THREE.Mesh(geometry,material);
-	wall.position.y += 25;
-	wall.position.z +=75; 
+	wall.position.y += 33;
 	wall.name = "wall";
 	this.scene.add(wall);
+
+	var geometry2 = new THREE.CubeGeometry(3,50,500);
+	var rightWall = new THREE.Mesh(geometry2,material);
+	rightWall.position.set(249,33,-249);
+
+	var leftWall = new THREE.Mesh(geometry2,material);
+	leftWall.position.set(-249,33,-249);
+
+	this.scene.add(leftWall);
+	this.scene.add(rightWall);
 }
 
 Canvas.prototype.createSkybox = function(){
-	var urlPrefix = "imgs/Skybox/";
-	var urls = [ urlPrefix + "posx.jpg", urlPrefix + "negx.jpg",
-    urlPrefix + "posy.jpg", urlPrefix + "negy.jpg",
-    urlPrefix + "posz.jpg", urlPrefix + "negz.jpg" ];
-	var textureCube = THREE.ImageUtils.loadTextureCube( urls );
-
-	var shader = THREE.ShaderUtils.lib["cube"];
-	var uniforms = THREE.UniformsUtils.clone( shader.uniforms );
-	uniforms['tCube'].texture= textureCube;   // textureCube has been init before
-	var material = new THREE.MeshShaderMaterial({
-    	fragmentShader    : shader.fragmentShader,
-    	vertexShader  : shader.vertexShader,
-    	uniforms  : uniforms
-	});
-
-	skyboxMesh    = new THREE.Mesh( new THREE.CubeGeometry( 100000, 100000, 100000, 1, 1, 1, null, true ), material );
-	// add it to the scene
-	scene.addObject( skyboxMesh );
+	
+	var materialArray = [];
+	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'imgs/skybox/posx.jpg' ) }));
+	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'imgs/skybox/negx.jpg' ) }));
+	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'imgs/skybox/posy.jpg' ) }));
+	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'imgs/skybox/negy.jpg' ) }));
+	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'imgs/skybox/posz.jpg' ) }));
+	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'imgs/skybox/negz.jpg' ) }));
+	for (var i = 0; i < 6; i++)
+	   materialArray[i].side = THREE.BackSide;
+	var skyboxMaterial = new THREE.MeshFaceMaterial( materialArray );
+	var skyboxGeom = new THREE.CubeGeometry( 1000, 1000, 1000, 1, 1, 1 );
+	var skybox = new THREE.Mesh( skyboxGeom, skyboxMaterial );
+	this.scene.add( skybox );
 }
 /*Canvas.prototype.createBuilding = function(){
 	that = this;
