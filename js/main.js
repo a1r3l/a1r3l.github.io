@@ -7,4 +7,12 @@ var CANVAS = {
 	}
 }
 
+var twoDCANVAS = {
+	init: function(){
+		var canvas = new twoDCanvas();
+		canvas.init();
+	}
+}
+
+twoDCANVAS.init();
 CANVAS.init();

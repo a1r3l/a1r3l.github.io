@@ -10,12 +10,15 @@
 	overflow: hidden;
 }
 
-.twodCanvas{
+.canvasEditor{
 	position: fixed;
 	z-index: 1;
 	bottom: 0;
 	left: calc(50% - 250px);
 	width: 500px;
 	height: 250px;
+	/*left: 0;
+	height: 100vh;
+	width: 100vw;*/
 	background: white;
 }
