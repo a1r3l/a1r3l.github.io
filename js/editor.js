@@ -6,6 +6,9 @@ function twoDCanvas(){
 	this.context = null;
 	this.onCanvas = false;
 	this.mousePos = {x:null,y:null};
+	//SPRAY VARIABLES
+	this.paint = false;
+	this.density = null;
 }
 
 twoDCanvas.prototype.init =  function (){
@@ -13,7 +16,7 @@ twoDCanvas.prototype.init =  function (){
 	this.setUpCanvas();
 	var that = this;
 	this.mousePosUpdate();
-	this.setPaintStyle(5,'round','round','blue')
+	this.setPaintStyle(20,'round','round','blue',200);
 	this.setListeners();
 }
 
@@ -35,39 +38,47 @@ twoDCanvas.prototype.mousePosUpdate = function(){
 	},false);
 }
 
-twoDCanvas.prototype.setPaintStyle = function(lineWidth,lineJoin,lineCap,color){
-	this.context.lineWidth = lineWidth;
+twoDCanvas.prototype.setPaintStyle = function(radius,lineJoin,lineCap,color,density){
+	this.context.lineWidth = radius;
 	this.context.lineJoin = lineJoin;
 	this.context.lineCap = lineCap;
-	this.context.strokeStyle = color;
+	this.context.fillStyle = color;
+	this.density = density;
 }
 
 twoDCanvas.prototype.setListeners = function(){
 	that = this;
-	//this.canvas.addEventListener('mouseover',function(){
-		//that.onCanvas = true;
-	//});
-
 	this.canvas.addEventListener('mousedown',function(){
-		that.context.beginPath();
-		that.context.moveTo(that.mousePos.x,that.mousePos.y);
-
-		that.canvas.addEventListener('mousemove',function(){
-			that.onPaint(that);	
-		},false);
+		that.paint = true;
 	},false);
 
 	this.canvas.addEventListener('mouseup', function(){
-		that.canvas.removeEventListener('mousemove',that.onPaint,false);
+		that.paint = false;
+		that.canvas.removeEventListener('mousemove',that.draw,false);
 	},false);
 
-	/*this.canvas.addEventListener('mouseleave',function(){
-		that.canvas.removeEventListener('mousemove',that.onPaint,false);
-	});*/
+	this.canvas.addEventListener('mouseleave',function(){
+		that.paint = false;
+	});
+	this.canvas.addEventListener('mousemove',function(){
+		that.draw(that);
+	});
 }
 
-twoDCanvas.prototype.onPaint = function(canvas){
-	//console.log(canvas);
-	canvas.context.lineTo(canvas.mousePos.x,canvas.mousePos.y);
-	canvas.context.stroke();
-}
+twoDCanvas.prototype.getRandomFloat = function(min,max) {
+  		return Math.random() * (max - min) + min;
+};
+
+twoDCanvas.prototype.draw = function(canvas) {
+	console.log(canvas.density);
+	if(canvas.paint){
+		for (var i = canvas.density; i--; ) {
+		var angle = canvas.getRandomFloat(0, Math.PI*2);
+		var radius = canvas.getRandomFloat(0, canvas.context.lineWidth);
+			canvas.context.fillRect(
+	    	canvas.mousePos.x + radius * Math.cos(angle),
+	        canvas.mousePos.y + radius * Math.sin(angle), 
+	        1, 1);
+	    }	
+	}
+};
