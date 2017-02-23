@@ -14,5 +14,5 @@ var twoDCANVAS = {
 	}
 }
 
-twoDCANVAS.init();
+//twoDCANVAS.init();
 CANVAS.init();

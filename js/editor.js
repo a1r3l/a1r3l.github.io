@@ -14,7 +14,6 @@ function twoDCanvas(){
 twoDCanvas.prototype.init =  function (){
 	//SetUpCanvasComponents
 	this.setUpCanvas();
-	var that = this;
 	this.mousePosUpdate();
 	this.setPaintStyle(20,'round','round','blue',200);
 	this.setListeners();
@@ -30,7 +29,7 @@ twoDCanvas.prototype.setUpCanvas= function(){
 }
 
 twoDCanvas.prototype.mousePosUpdate = function(){
-	that = this;
+	var that = this;
 	this.canvas.addEventListener('mousemove',function(e){
 		var bbox = that.canvas.getBoundingClientRect();
 		that.mousePos.x = e.clientX - bbox.left * (that.canvas.width/bbox.width); //- this.offsetLeft;
@@ -47,7 +46,7 @@ twoDCanvas.prototype.setPaintStyle = function(radius,lineJoin,lineCap,color,dens
 }
 
 twoDCanvas.prototype.setListeners = function(){
-	that = this;
+	var that = this;
 	this.canvas.addEventListener('mousedown',function(){
 		that.paint = true;
 	},false);
@@ -70,7 +69,6 @@ twoDCanvas.prototype.getRandomFloat = function(min,max) {
 };
 
 twoDCanvas.prototype.draw = function(canvas) {
-	console.log(canvas.density);
 	if(canvas.paint){
 		for (var i = canvas.density; i--; ) {
 		var angle = canvas.getRandomFloat(0, Math.PI*2);

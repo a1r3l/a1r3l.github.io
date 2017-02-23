@@ -19,13 +19,14 @@ Canvas.prototype.init = function(){
 	this.createAcera();
 	this.createStreet();
 	this.createFrontWall();
-	//this.createBuilding();
-
-
-
+	this.createBuilding(-560,0,-200);
+	this.createStop();
+	this.createLamp(280,0,65);
+	this.createLamp(-280,0,65);
+	//this.createTree(280,0,65);
 	this.createSkybox();
-	this.createLight(this.camera.position.x,this.camera.position.y,this.camera.position.z);
 
+	//this.createLight(0,100,200);
 	this.canvasContainer.appendChild(this.renderer.domElement);
 	this.renderCanvas();
 }
@@ -44,7 +45,7 @@ Canvas.prototype.createRenderer = function(){
 
 //Función para crear una camara perspectiva que mira al centro del mundo
 Canvas.prototype.createCamera = function(){
-	this.camera = new THREE.PerspectiveCamera(75,this.canvasContainer.clientWidth/this.canvasContainer.clientHeight,1, 1000);
+	this.camera = new THREE.PerspectiveCamera(85,this.canvasContainer.clientWidth/this.canvasContainer.clientHeight,1, 2000);
 	this.camera.position.x = -10;
 	this.camera.position.y = 100;
 	this.camera.position.z = 200;
@@ -61,13 +62,16 @@ Canvas.prototype.createLight = function(x,y,z){
 
 //Función recursiva render que pintara la Scene en al WEB
 Canvas.prototype.renderCanvas = function(){
+	//console.log("x " + this.camera.position.x + " y " +this.camera.position.y + " z " +this.camera.position.z)
 	this.renderer.render(this.scene,this.camera);
 	requestAnimationFrame(this.renderCanvas.bind(this));
 }
 
 Canvas.prototype.createPlane = function(){
-	var geometry = new THREE.CubeGeometry(2000,3,2000);
-	var texture = new THREE.ImageUtils.loadTexture('imgs/ground.jpg');
+	var geometry = new THREE.CubeGeometry(1200,3,1200);
+	var texture = new THREE.ImageUtils.loadTexture('imgs/grass.jpg');
+	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+	texture.repeat.set( 100, 100);
 	var material = new THREE.MeshPhongMaterial({map: texture});
 	var plane = new THREE.Mesh(geometry,material);
 	plane.position = new THREE.Vector3(0,0,0); 
@@ -102,6 +106,78 @@ Canvas.prototype.createAcera = function(){
 	this.scene.add(right);
 	this.scene.add(plane);
 }
+
+Canvas.prototype.createBuilding = function(x,y,z){
+	var that = this;
+	var manager = new THREE.LoadingManager();
+	var mtlLoader = new THREE.MTLLoader();
+	mtlLoader.load('obj/build2/building.mtl', function(materials){
+		materials.preload();
+
+		var objLoader = new THREE.OBJLoader(manager);
+		objLoader.setMaterials(materials);
+		objLoader.load('obj/build2/building.obj',function(object){
+			object.scale.set(4,4,4);
+			object.position.set(x,y,z)
+			//object.rotation.y += that.degToRad(-90); 
+			that.scene.add(object);			
+			//that.createLight(x,y+80,z+30);
+		});
+	});
+}
+
+Canvas.prototype.createStop = function() {
+	var that = this;
+	var manager = new THREE.LoadingManager();
+	var mtlLoader = new THREE.MTLLoader();
+	mtlLoader.load('obj/stop/stop.mtl', function(materials){
+		materials.preload();
+
+		var objLoader = new THREE.OBJLoader(manager);
+		objLoader.setMaterials(materials);
+		objLoader.load('obj/stop/stop.obj',function(object){
+			object.scale.set(4,6,4);
+			object.position.set(280,20,65)
+			that.scene.add(object);
+		});
+	});
+};
+
+Canvas.prototype.createLamp = function(x,y,z) {
+	var that = this;
+	var manager = new THREE.LoadingManager();
+	var mtlLoader = new THREE.MTLLoader();
+	mtlLoader.load('obj/lamp/StreetLamp.mtl', function(materials){
+		materials.preload();
+
+		var objLoader = new THREE.OBJLoader(manager);
+		objLoader.setMaterials(materials);
+		objLoader.load('obj/lamp/StreetLamp.obj',function(object){
+			object.scale.set(4,6,4);
+			object.position.set(x,y,z)
+			object.rotation.y += that.degToRad(-90); 
+			that.scene.add(object);			
+			that.createLight(x,y+80,z+30);
+		});
+	});
+};
+
+Canvas.prototype.createTree = function(x,y,z) {
+	var that = this;
+	var manager = new THREE.LoadingManager();
+	var mtlLoader = new THREE.MTLLoader();
+	mtlLoader.load('obj/tree/tree.mtl', function(materials){
+		materials.preload();
+
+		var objLoader = new THREE.OBJLoader(manager);
+		objLoader.setMaterials(materials);
+		objLoader.load('obj/tree/tree.obj',function(object){
+			object.scale.set(4,6,4);
+			object.position.set(x,y,z)
+			that.scene.add(object);			
+		});
+	});
+};
 
 Canvas.prototype.createStreet = function(){
 	
@@ -170,7 +246,6 @@ Canvas.prototype.createFrontWall = function(){
 }
 
 Canvas.prototype.createSkybox = function(){
-	
 	var materialArray = [];
 	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'imgs/skybox/posx.jpg' ) }));
 	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'imgs/skybox/negx.jpg' ) }));
@@ -181,23 +256,37 @@ Canvas.prototype.createSkybox = function(){
 	for (var i = 0; i < 6; i++)
 	   materialArray[i].side = THREE.BackSide;
 	var skyboxMaterial = new THREE.MeshFaceMaterial( materialArray );
-	var skyboxGeom = new THREE.CubeGeometry( 1000, 1000, 1000, 1, 1, 1 );
+	var skyboxGeom = new THREE.CubeGeometry( 1200, 1000, 1200, 1, 1, 1 );
 	var skybox = new THREE.Mesh( skyboxGeom, skyboxMaterial );
 	this.scene.add( skybox );
 }
-/*Canvas.prototype.createBuilding = function(){
-	that = this;
-	var manager = new THREE.LoadingManager();
-	var loader = new THREE.ObjectLoader(manager);
-	var texture = new THREE.ImageUtils.loadTexture('imgs/building.jpg');
-	var material = new THREE.MeshPhongMaterial({map: texture});
-	loader.load('obj/building.obj',function(obj){
-		obj.traverse(function(){
-			if (child instanceof THREE.Mesh) {
-                child.material = material;
-            }	
-		});
-		obj.position.z -=10;
-		that.scene.add(obj);
-	});
-}*/
+
+Canvas.prototype.degToRad = function(degrees) {
+	return degrees * (Math.PI/180);
+};
+
+/*Canvas.prototype.loadOBJ = function(objPath,texturePath,scene,x,y,z)
+{
+    var loader = new THREE.OBJLoader();
+    var that = this;
+    loader.load(objPath, function (object) {
+        object.traverse( function ( child ) {
+             if ( child instanceof THREE.Mesh )
+             {
+                 var texture = new THREE.Texture();
+                 var imgLoader = new THREE.ImageLoader();
+
+                 imgLoader.load( texturePath, function ( image ) {
+                     texture.image = image;
+                     texture.needsUpdate = true;
+                 } );
+                 child.material.map = texture;
+                 }
+             } );
+
+        that.mesh = object;
+        scene.add(object);
+        that.move(0, -10, -30);
+    });
+    return;
+};*/
