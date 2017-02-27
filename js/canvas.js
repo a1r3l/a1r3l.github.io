@@ -1,5 +1,7 @@
 console.log("Canvas Conected");
 
+var CanvasTexture = null;
+
 function Canvas(){
 	this.canvasContainer = null;
 	this.renderer = null;
@@ -15,16 +17,24 @@ Canvas.prototype.init = function(){
 	this.createScene();
 	this.createRenderer();
 	this.createCamera();
-	this.createPlane();
+	
+	this.createPlane(1200,2,1200);
+	//Metele posicione
 	this.createAcera();
+	//Metele posicione
 	this.createStreet();
+	//Metele posicione
 	this.createFrontWall();
+	//Metele posicione
 	this.createBuilding(-560,0,-200);
+	//Metele posicione
 	this.createStop();
 	this.createLamp(280,0,65);
 	this.createLamp(-280,0,65);
-	//this.createTree(280,0,65);
 	this.createSkybox();
+	this.createDrawPlane(-187,32,2);
+	this.createDrawPlane(187,32,2);
+	this.createDrawPlane(59,32,2);
 
 	//this.createLight(0,100,200);
 	this.canvasContainer.appendChild(this.renderer.domElement);
@@ -67,44 +77,43 @@ Canvas.prototype.renderCanvas = function(){
 	requestAnimationFrame(this.renderCanvas.bind(this));
 }
 
-Canvas.prototype.createPlane = function(){
-	var geometry = new THREE.CubeGeometry(1200,3,1200);
+Canvas.prototype.createPlane = function(x,y,z){
+	var geometry = new THREE.CubeGeometry(x,y,z);
 	var texture = new THREE.ImageUtils.loadTexture('imgs/grass.jpg');
 	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 	texture.repeat.set( 100, 100);
 	var material = new THREE.MeshPhongMaterial({map: texture});
 	var plane = new THREE.Mesh(geometry,material);
-	plane.position = new THREE.Vector3(0,0,0); 
+	plane.position = new THREE.Vector3(0,-2,0); 
 	this.scene.add(plane);
 }
 
 Canvas.prototype.createAcera = function(){
-	var geometry = new THREE.CubeGeometry(600,14,70);
+	var geometry = new THREE.CubeGeometry(600,4,70);
 	var texture = new THREE.ImageUtils.loadTexture('imgs/baldosa.jpg');
 
 	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 	texture.repeat.set( 60, 8);
 
 	var material = new THREE.MeshPhongMaterial({map: texture});
-	var plane = new THREE.Mesh(geometry,material);
-	plane.position.y += 1;
-	plane.position.z += 35; 
+	var front = new THREE.Mesh(geometry,material);
+	front.position.set(0,2,35);
 	
 	var texture2 = new THREE.ImageUtils.loadTexture('imgs/baldosa.jpg');
 	texture2.wrapS = texture2.wrapT = THREE.RepeatWrapping;
 	texture2.repeat.set( 8, 60);
 	var material2 = new THREE.MeshPhongMaterial({map: texture2});
 	
-	var geometry1 = new THREE.CubeGeometry(50,14,600);
+	var geometry1 = new THREE.CubeGeometry(50,4,600);
 	var left = new THREE.Mesh(geometry1,material2);
-	left.position.set(-275,1,-300);
+	left.position.set(-275,2,-300);
 
 	var right = new THREE.Mesh(geometry1,material2);
-	right.position.set(275,1,-300);
+	right.position.set(275,2,-300);
 
 	this.scene.add(left);
 	this.scene.add(right);
-	this.scene.add(plane);
+	this.scene.add(front);
 }
 
 Canvas.prototype.createBuilding = function(x,y,z){
@@ -113,15 +122,12 @@ Canvas.prototype.createBuilding = function(x,y,z){
 	var mtlLoader = new THREE.MTLLoader();
 	mtlLoader.load('obj/build2/building.mtl', function(materials){
 		materials.preload();
-
 		var objLoader = new THREE.OBJLoader(manager);
 		objLoader.setMaterials(materials);
 		objLoader.load('obj/build2/building.obj',function(object){
 			object.scale.set(4,4,4);
 			object.position.set(x,y,z)
-			//object.rotation.y += that.degToRad(-90); 
 			that.scene.add(object);			
-			//that.createLight(x,y+80,z+30);
 		});
 	});
 }
@@ -182,7 +188,7 @@ Canvas.prototype.createTree = function(x,y,z) {
 Canvas.prototype.createStreet = function(){
 	
 	//CARRETERA HORIZONTAL
-	var geometry = new THREE.CubeGeometry(600,7,100);
+	var geometry = new THREE.CubeGeometry(600,1,100);
 	var texture = new THREE.ImageUtils.loadTexture('imgs/carretera.jpg');
 	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 	texture.repeat.set( 5, 1);
@@ -192,7 +198,7 @@ Canvas.prototype.createStreet = function(){
 	plane.position.z += 120;  
 	
 	//ESQUINAS DEL MAPA
-	var cornerGeometry = new THREE.CubeGeometry(100,7,100);
+	var cornerGeometry = new THREE.CubeGeometry(100,1,100);
 	var cornerTexture = new THREE.ImageUtils.loadTexture('imgs/esq_drch.jpg');
 	var cornerMaterial = new THREE.MeshPhongMaterial({map: cornerTexture});
 	var rightCorner  = new THREE.Mesh(cornerGeometry,cornerMaterial);
@@ -203,7 +209,7 @@ Canvas.prototype.createStreet = function(){
 	leftCorner.position.set(350,1,120);
 
 	//CARETRAS PARALELAS HACIA DENTRO
-	var sideStrets = new THREE.CubeGeometry(100,7,600);
+	var sideStrets = new THREE.CubeGeometry(100,1,600);
 	var texture2 = new THREE.ImageUtils.loadTexture('imgs/carretera_up.jpg');
 	texture2.wrapS = texture2.wrapT = THREE.RepeatWrapping;
 	texture2.repeat.set( 1, 5);
@@ -222,7 +228,7 @@ Canvas.prototype.createStreet = function(){
 }
 
 Canvas.prototype.createFrontWall = function(){
-	var geometry = new THREE.CubeGeometry(500,50,3);
+	var geometry = new THREE.CubeGeometry(500,64,3);
 	var texture = new THREE.ImageUtils.loadTexture('imgs/wall.3.jpg');
 	
 	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
@@ -230,17 +236,18 @@ Canvas.prototype.createFrontWall = function(){
 
 	var material = new THREE.MeshPhongMaterial({map: texture});
 	var wall = new THREE.Mesh(geometry,material);
-	wall.position.y += 33;
+	wall.position.set(0,32,0);
 	wall.name = "wall";
-	this.scene.add(wall);
+	
 
-	var geometry2 = new THREE.CubeGeometry(3,50,500);
+	var geometry2 = new THREE.CubeGeometry(3,64,500);
 	var rightWall = new THREE.Mesh(geometry2,material);
-	rightWall.position.set(249,33,-249);
+	rightWall.position.set(249,32,-249);
 
 	var leftWall = new THREE.Mesh(geometry2,material);
-	leftWall.position.set(-249,33,-249);
-
+	leftWall.position.set(-249,32,-249);
+	
+	this.scene.add(wall);
 	this.scene.add(leftWall);
 	this.scene.add(rightWall);
 }
@@ -264,6 +271,18 @@ Canvas.prototype.createSkybox = function(){
 Canvas.prototype.degToRad = function(degrees) {
 	return degrees * (Math.PI/180);
 };
+
+Canvas.prototype.createDrawPlane = function(x,y,z) {
+	var canvas = document.querySelector('#twodCanvas');
+	var geometry = new THREE.PlaneGeometry(128,64);
+	if(CanvasTexture == null) CanvasTexture = new THREE.Texture(canvas);
+	var material = new THREE.MeshPhongMaterial({map: CanvasTexture,transparent: true});
+	CanvasTexture.needsUpdate = true;
+	var draw = new THREE.Mesh(geometry,material);
+	draw.position.set(x,y,z);
+	this.scene.add(draw);
+};
+
 
 /*Canvas.prototype.loadOBJ = function(objPath,texturePath,scene,x,y,z)
 {

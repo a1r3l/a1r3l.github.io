@@ -22,7 +22,7 @@ twoDCanvas.prototype.init =  function (){
 twoDCanvas.prototype.setUpCanvas= function(){
 	this.canvasContainer = document.getElementById('editCanvas');
 	var canvasStyle = getComputedStyle(this.canvasContainer);
-	this.canvas = document.getElementById('2dCanvas');
+	this.canvas = document.getElementById('twodCanvas');
 	this.canvas.width = parseInt(canvasStyle.getPropertyValue('width'));
 	this.canvas.height = parseInt(canvasStyle.getPropertyValue('height'));
 	this.context = this.canvas.getContext("2d");
@@ -53,6 +53,7 @@ twoDCanvas.prototype.setListeners = function(){
 
 	this.canvas.addEventListener('mouseup', function(){
 		that.paint = false;
+		CanvasTexture.needsUpdate = true;
 		that.canvas.removeEventListener('mousemove',that.draw,false);
 	},false);
 
@@ -60,6 +61,7 @@ twoDCanvas.prototype.setListeners = function(){
 		that.paint = false;
 	});
 	this.canvas.addEventListener('mousemove',function(){
+		CanvasTexture.needsUpdate = true;
 		that.draw(that);
 	});
 }
