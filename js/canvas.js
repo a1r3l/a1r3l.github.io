@@ -35,6 +35,8 @@ Canvas.prototype.init = function(){
 	this.createDrawPlane(-187,32,2);
 	this.createDrawPlane(187,32,2);
 	this.createDrawPlane(59,32,2);
+	this.createDrawPlane(-69,32,2);
+
 
 	//this.createLight(0,100,200);
 	this.canvasContainer.appendChild(this.renderer.domElement);
@@ -282,6 +284,7 @@ Canvas.prototype.createDrawPlane = function(x,y,z) {
 	draw.position.set(x,y,z);
 	this.scene.add(draw);
 };
+
 
 
 /*Canvas.prototype.loadOBJ = function(objPath,texturePath,scene,x,y,z)
