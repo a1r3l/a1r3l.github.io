@@ -26,6 +26,8 @@ Canvas.prototype.init = function(){
 	this.createScene();
 	//Creo el Renderer
 	this.createRenderer();
+	//Listener al raton
+	this.setEventsListeners();
 	//Creo la Camara
 	this.createCamera();
 	//Creo el suelo de hierba
@@ -49,6 +51,7 @@ Canvas.prototype.init = function(){
 	this.wallone = new Wall("one",this.scene,-192,32,2);
 	this.walltwo = new Wall("two",this.scene,192,32,2);
 	//Añado todo al canvasContainer
+	//window.addEventListener( 'resize', this.onWindowResize(this.camera,this.renderer), true );
 	this.canvasContainer.appendChild(this.renderer.domElement);
 	this.renderCanvas();
 }
@@ -86,6 +89,7 @@ Canvas.prototype.createLight = function(x,y,z){
 //Función recursiva render que pintara la Scene en al WEB
 Canvas.prototype.renderCanvas = function(){
 	//console.log("x " + this.camera.position.x + " y " +this.camera.position.y + " z " +this.camera.position.z)
+	raycaster.setFromCamera( mouse, this.camera );
 	this.renderer.render(this.scene,this.camera);
 	requestAnimationFrame(this.renderCanvas.bind(this));
 }
@@ -370,10 +374,71 @@ Canvas.prototype.createSideBuildings = function(x,y,z,name) {
 	this.scene.add(rightSide);
 };
 
+Canvas.prototype.mouseMove = function(event){
+
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+}
+
 Canvas.prototype.degToRad = function(degrees) {
 	return degrees * (Math.PI/180);
 };
 
 Canvas.prototype.getScene= function(){
 	return this.scene;
+}
+
+Canvas.prototype.onWindowResize = function (camera,renderer){
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+Canvas.prototype.setEventsListeners = function(){
+	var that = this;
+	this.renderer.domElement.addEventListener('mousedown', function(){
+		that.drawOnPlane(this,that);
+	},false);	
+	this.renderer.domElement.addEventListener('mousemove',function(){
+		that.drawOnPlane(this,that);
+	} ,false);
+	this.renderer.domElement.addEventListener('mouseup', function(){
+		that.renderer.domElement.removeEventListener('mousemove',that.drawOnPlane);
+	},false);
+
+
+}
+
+Canvas.prototype.drawOnPlane = function(e,that){
+	
+	mouse.x = (e.clientX / that.renderer.domElement.width) * 2 - 1;
+    mouse.y = -(e.clientY / that.renderer.domElement.height) * 2 + 1;
+
+	var intersects = raycaster.intersectObjects(this.scene.children);
+
+	for (var i = 0 ; i < intersects.length; i++){
+		if(intersects[i].object.name == "planoone"){
+			var xPos = intersects[i].point.x;
+			var yPos = intersects[i].point.y;
+			var canvasX = xPos + 320;
+			var canvasY = 64 - yPos; 
+			
+			intersects[i].object.wall.twoDcanvas.mousePos.x = canvasX;
+			intersects[i].object.wall.twoDcanvas.mousePos.y = canvasY;
+			intersects[i].object.wall.twoDcanvas.paint = true;
+			intersects[i].object.wall.twoDcanvas.draw(intersects[i].object.wall.twoDcanvas);
+			//console.log(intersects[i].object.wall.twoDcanvas);
+			//console.log("Choco con PlanoOne: x:" + canvasX + "y:" + canvasY);
+		}
+		else if (intersects[i].object.name == "planotwo"){
+			var xPos = intersects[i].point.x;
+			var yPos = intersects[i].point.y;
+			var canvasX = xPos - 64;
+			var canvasY = 64 - yPos;
+			intersects[i].object.wall.twoDcanvas.mousePos.x = canvasX;
+			intersects[i].object.wall.twoDcanvas.mousePos.y = canvasY;
+			intersects[i].object.wall.twoDcanvas.paint = true;
+			intersects[i].object.wall.twoDcanvas.draw(intersects[i].object.wall.twoDcanvas);
+		}
+	}
 }

@@ -16,7 +16,7 @@ twoDCanvas.prototype.init =  function (){
 	//SetUpCanvasComponents
 	this.setUpCanvas();
 	this.mousePosUpdate();
-	this.setPaintStyle(20,'round','round','blue',200);
+	this.setPaintStyle(2,'round','round','blue',50);
 	this.setListeners();
 }
 
@@ -79,6 +79,7 @@ twoDCanvas.prototype.getRandomFloat = function(min,max) {
 };
 
 twoDCanvas.prototype.draw = function(canvas) {
+	console.log("x:" + this.mousePos.x + " y:" + this.mousePos.y);
 	if(canvas.paint){
 		for (var i = canvas.density; i--; ) {
 		var angle = canvas.getRandomFloat(0, Math.PI*2);
@@ -87,7 +88,8 @@ twoDCanvas.prototype.draw = function(canvas) {
 	    	canvas.mousePos.x + radius * Math.cos(angle),
 	        canvas.mousePos.y + radius * Math.sin(angle), 
 	        1, 1);
-	    }	
+	    }
+	    canvas.updateTexture();	
 	}
 };
 
