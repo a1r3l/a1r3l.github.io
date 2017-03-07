@@ -4,13 +4,14 @@ var planesTextures = [];
 //var rayCaster = new THREE.RayCaster();
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
+var paint = null;
 
 function Canvas(){
 	this.canvasContainer = null;
 	this.renderer = null;
 	this.camera = null;
 	this.scene = null;
-	this.control = null;
+	//this.control = null;
 	this.textureLoader= null;
 	this.wallone = null;
 	this.walltwo = null;
@@ -77,7 +78,7 @@ Canvas.prototype.createCamera = function(){
 	this.camera.position.z = 200;
 	this.camera.lookAt(new THREE.Vector3(0,0,0));
 
-	control = new THREE.OrbitControls(this.camera,this.renderer.domElement);
+	//control = new THREE.OrbitControls(this.camera,this.renderer.domElement);
 }
 
 Canvas.prototype.createLight = function(x,y,z){
@@ -396,13 +397,15 @@ Canvas.prototype.onWindowResize = function (camera,renderer){
 
 Canvas.prototype.setEventsListeners = function(){
 	var that = this;
-	this.renderer.domElement.addEventListener('mousedown', function(){
-		that.drawOnPlane(this,that);
+	this.renderer.domElement.addEventListener('mousedown', function(e){
+		that.drawOnPlane(e,that);
+		paint = true;
 	},false);	
-	this.renderer.domElement.addEventListener('mousemove',function(){
-		that.drawOnPlane(this,that);
+	this.renderer.domElement.addEventListener('mousemove',function(e){
+		if(paint) that.drawOnPlane(e,that);
 	} ,false);
 	this.renderer.domElement.addEventListener('mouseup', function(){
+		paint = false;
 		that.renderer.domElement.removeEventListener('mousemove',that.drawOnPlane);
 	},false);
 
