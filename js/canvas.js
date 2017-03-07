@@ -398,15 +398,21 @@ Canvas.prototype.onWindowResize = function (camera,renderer){
 Canvas.prototype.setEventsListeners = function(){
 	var that = this;
 	this.renderer.domElement.addEventListener('mousedown', function(e){
-		that.drawOnPlane(e,that);
+		mouse.x = (e.clientX / that.renderer.domElement.width) * 2 - 1;
+    	mouse.y = -(e.clientY / that.renderer.domElement.height) * 2 + 1;
 		paint = true;
+		//that.drawOnPlane(e,that);
+	
 	},false);	
 	this.renderer.domElement.addEventListener('mousemove',function(e){
+		mouse.x = (e.clientX / that.renderer.domElement.width) * 2 - 1;
+    	mouse.y = -(e.clientY / that.renderer.domElement.height) * 2 + 1;
 		if(paint) that.drawOnPlane(e,that);
 	} ,false);
+	
 	this.renderer.domElement.addEventListener('mouseup', function(){
 		paint = false;
-		that.renderer.domElement.removeEventListener('mousemove',that.drawOnPlane);
+		that.renderer.domElement.removeEventListener('mousemove',that.drawOnPlane,false);
 	},false);
 
 
@@ -414,8 +420,8 @@ Canvas.prototype.setEventsListeners = function(){
 
 Canvas.prototype.drawOnPlane = function(e,that){
 	
-	mouse.x = (e.clientX / that.renderer.domElement.width) * 2 - 1;
-    mouse.y = -(e.clientY / that.renderer.domElement.height) * 2 + 1;
+	//mouse.x = (e.clientX / that.renderer.domElement.width) * 2 - 1;
+    //mouse.y = -(e.clientY / that.renderer.domElement.height) * 2 + 1;
 
 	var intersects = raycaster.intersectObjects(this.scene.children);
 
@@ -430,6 +436,7 @@ Canvas.prototype.drawOnPlane = function(e,that){
 			intersects[i].object.wall.twoDcanvas.mousePos.y = canvasY;
 			intersects[i].object.wall.twoDcanvas.paint = true;
 			intersects[i].object.wall.twoDcanvas.draw(intersects[i].object.wall.twoDcanvas);
+	
 			//console.log(intersects[i].object.wall.twoDcanvas);
 			//console.log("Choco con PlanoOne: x:" + canvasX + "y:" + canvasY);
 		}

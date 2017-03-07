@@ -33,3 +33,11 @@ Wall.prototype.createDrawPlane = function(id,scene,x,y,z,name) {
 
 	return draw;
 };
+
+Wall.prototype.changeBrushSize = function(newSize){
+	this.twoDcanvas.changeBrushSize(newSize);
+}
+
+Wall.prototype.changeBrushColor = function(newColor){
+	this.twoDcanvas.changeBrushColor(newColor);
+}

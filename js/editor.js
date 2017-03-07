@@ -15,9 +15,9 @@ function twoDCanvas(name){
 twoDCanvas.prototype.init =  function (){
 	//SetUpCanvasComponents
 	this.setUpCanvas();
-	this.mousePosUpdate();
+	//this.mousePosUpdate();
 	this.setPaintStyle(2,'round','round','blue',50);
-	this.setListeners();
+	//this.setListeners();
 }
 
 twoDCanvas.prototype.setUpCanvas= function(){
@@ -79,7 +79,7 @@ twoDCanvas.prototype.getRandomFloat = function(min,max) {
 };
 
 twoDCanvas.prototype.draw = function(canvas) {
-	console.log("x:" + this.mousePos.x + " y:" + this.mousePos.y);
+	//console.log("x:" + this.mousePos.x + " y:" + this.mousePos.y);
 	if(canvas.paint){
 		for (var i = canvas.density; i--; ) {
 		var angle = canvas.getRandomFloat(0, Math.PI*2);
@@ -102,3 +102,12 @@ twoDCanvas.prototype.updateTexture = function(){
 		planesTextures[1].needsUpdate = true;
 	}
 }
+
+twoDCanvas.prototype.changeBrushSize = function(newSize) {
+	this.context.lineWidth = newSize;
+};
+
+
+twoDCanvas.prototype.changeBrushColor = function(newColor) {
+	this.context.fillStyle = newColor;
+};
