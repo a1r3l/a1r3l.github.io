@@ -28,8 +28,6 @@ Canvas.prototype.init = function(){
 	this.createStreet();
 	
 	//Metele posicione
-	//this.createBuilding(-560,0,-200);
-
 	this.createOBJ(0,0,-400,"building");
 
 	//Metele posicione
@@ -134,7 +132,7 @@ Canvas.prototype.createAcera = function(){
 	this.scene.add(front);
 }
 
-Canvas.prototype.createBuilding = function(x,y,z){
+Canvas.prototype.createBuilding = function(x,y,z,name){
 	var that = this;
 	var manager = new THREE.LoadingManager();
 	var mtlLoader = new THREE.MTLLoader();
