@@ -1,6 +1,7 @@
 console.log("2DCanvas Conected");
 
-function twoDCanvas(){
+function twoDCanvas(name){
+	this.name = name;
 	this.canvas = null;
 	this.canvasContainer = null;
 	this.context = null;
@@ -15,16 +16,18 @@ twoDCanvas.prototype.init =  function (){
 	//SetUpCanvasComponents
 	this.setUpCanvas();
 	this.mousePosUpdate();
-	this.setPaintStyle(20,'round','round','blue',200);
+	this.setPaintStyle(2,'round','round','blue',50);
 	this.setListeners();
 }
 
 twoDCanvas.prototype.setUpCanvas= function(){
 	this.canvasContainer = document.getElementById('editCanvas');
 	var canvasStyle = getComputedStyle(this.canvasContainer);
-	this.canvas = document.getElementById('twodCanvas');
+	this.canvas = document.createElement('canvas');
+	this.canvas.id = this.name;
 	this.canvas.width = parseInt(canvasStyle.getPropertyValue('width'));
 	this.canvas.height = parseInt(canvasStyle.getPropertyValue('height'));
+	this.canvasContainer.appendChild(this.canvas);
 	this.context = this.canvas.getContext("2d");
 }
 
@@ -49,11 +52,15 @@ twoDCanvas.prototype.setListeners = function(){
 	var that = this;
 	this.canvas.addEventListener('mousedown',function(){
 		that.paint = true;
-	},false);
+		//CanvasTexture.needsUpdate = true;
+		that.draw(that);
+		that.updateTexture();
+	});
 
 	this.canvas.addEventListener('mouseup', function(){
 		that.paint = false;
-		CanvasTexture.needsUpdate = true;
+		//CanvasTexture.needsUpdate = true;
+		that.updateTexture();
 		that.canvas.removeEventListener('mousemove',that.draw,false);
 	},false);
 
@@ -61,7 +68,8 @@ twoDCanvas.prototype.setListeners = function(){
 		that.paint = false;
 	});
 	this.canvas.addEventListener('mousemove',function(){
-		CanvasTexture.needsUpdate = true;
+		//CanvasTexture.needsUpdate = true;
+		that.updateTexture();
 		that.draw(that);
 	});
 }
@@ -71,6 +79,7 @@ twoDCanvas.prototype.getRandomFloat = function(min,max) {
 };
 
 twoDCanvas.prototype.draw = function(canvas) {
+	console.log("x:" + this.mousePos.x + " y:" + this.mousePos.y);
 	if(canvas.paint){
 		for (var i = canvas.density; i--; ) {
 		var angle = canvas.getRandomFloat(0, Math.PI*2);
@@ -79,6 +88,17 @@ twoDCanvas.prototype.draw = function(canvas) {
 	    	canvas.mousePos.x + radius * Math.cos(angle),
 	        canvas.mousePos.y + radius * Math.sin(angle), 
 	        1, 1);
-	    }	
+	    }
+	    canvas.updateTexture();	
 	}
 };
+
+twoDCanvas.prototype.updateTexture = function(){
+	if(this.name == "twodCanvasone"){
+		planesTextures[0].needsUpdate = true;
+	}
+
+	else if(this.name == "twodCanvastwo"){
+		planesTextures[1].needsUpdate = true;
+	}
+}
