@@ -3,6 +3,8 @@
 <head>
 	<title>Graffity</title>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
 </head>
 <body>
 
@@ -13,6 +15,43 @@
 		<div class="canvasEditor" id="editCanvas"></div>
 	</div>
 
+		<!-- CONTROLS -->
+	<div class="editioncanvas">
+		<div class="linecont">
+			<input id="range" type="range" min="1" max="10" step="1" value="5">
+		</div>
+		<div class="zoom">
+			<div class="zoombut zoomin">
+				<i class="material-icons">zoom_in</i>
+			</div>
+			<div class="zoombut zoomout">
+				<i class="material-icons">zoom_out</i>
+			</div>
+		</div>
+		<div class="colors">
+			<div class="color red" name="#F44336"></div>
+			<div class="color green" name="#4CAF50"></div>
+			<div class="color blue" name="#2196F3"></div>
+			<div class="color yellow" name="#FFEB3B"></div>
+			<div class="color black" name="#000000"></div>
+			<div class="color white" name="#FFFFFF"></div>
+		</div>
+		<div class="controls">
+			<div class="lcont"><div class="line"></div></div>
+			<div class="arrow up">
+				<i class="material-icons">keyboard_arrow_up</i>
+			</div>
+			<div class="arrow down">
+				<i class="material-icons">keyboard_arrow_down</i>
+			</div>
+			<div class="arrow right">
+				<i class="material-icons">keyboard_arrow_right</i>
+			</div>
+			<div class="arrow left">
+				<i class="material-icons">keyboard_arrow_left</i>
+			</div>
+		</div>
+	</div>
 
 	<script type="text/javascript" src="js/three.js"></script>
 	<script type="text/javascript" src="js/OrbitControls.js"></script>
@@ -24,6 +63,8 @@
 	<script type="text/javascript" src="js/editor.js"></script>
 	<script type="text/javascript" src="js/wall.js"></script>
 	<script type="text/javascript" src="js/canvas.js"></script>
+	<script type="text/javascript" src="js/edition.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
+
 </body>
 </html>

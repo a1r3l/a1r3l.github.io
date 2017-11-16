@@ -4,7 +4,10 @@ var canvas = null;
 var CANVAS = {
 	init: function(){
 		canvas = new Canvas();
+		edition = new Edition();
 		canvas.init();	
+		edition.init();
+
 	}
 }
 

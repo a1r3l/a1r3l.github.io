@@ -45,3 +45,179 @@
 	width: 64px;
 	background: white;
 }
+
+/* CONTROLS */
+
+
+.controls{
+	border: 1px solid black;
+	position: fixed;
+	bottom: 10px;
+	left: calc(50% - 75px);
+	width: 150px;
+	height: 150px;
+	border-radius: 100%;
+	background-color: lightgrey;
+}
+
+.zoom{
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	position: fixed;
+	bottom: 11px;
+	right: calc(50%);
+	width: 120px;
+	height: 148px;
+	background-color: lightgrey;
+	border-radius: 10px 0 0 10px;
+	border: 1px solid black;
+}
+
+.zoombut{
+	width: 100%;
+	height: calc(50% - 1px);
+	padding-left: 10px;
+}
+
+.zoombut:hover{
+	cursor: pointer;
+	background-color: white;
+}
+
+.zoomin i{
+	margin-top: 20px;
+}
+
+.zoomout i{
+	margin-top: 30px;
+}
+
+
+.zoomin{
+	border-bottom: 1px solid black;
+}
+
+.zoomin:hover{
+	border-radius: 10px 0 0 0;
+	cursor: pointer;
+}
+
+.zoomout:hover{
+	border-radius: 0 0 0 10px;
+	cursor: pointer;
+}
+
+.zoomout{
+	border-top: 1px solid black;
+}
+
+.colors{
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	position: fixed;
+	bottom: 11px;
+	left: 50%;
+	width: 120px;
+	border-radius: 0 10px 10px 0;
+	height: 150px;
+}
+
+.color:first-child{
+	border-radius: 0 10px 0 0;
+}
+
+.color:last-child{
+	border-radius: 0 0 10px 0;
+}
+
+.color:hover{
+	width: calc(100% + 10px);
+	border-radius: 0 10px 10px 0;
+	cursor: pointer;
+}
+
+.color{
+	width: calc(100% - 2px);
+	border:1px black solid;
+	height: calc((100% / 6) - 2px);
+}
+
+.arrow i{
+	font-size: 50px;
+}
+
+.arrow:hover{
+	cursor: pointer;
+	color: grey;
+}
+
+.up{
+	position: absolute;
+	top: 5px;
+	left: calc(50% - 25px);
+}
+.down{
+	position: absolute;
+	bottom: 5px;
+	left: calc(50% - 25px);
+}
+
+.left{
+	position: absolute;
+	left: 5px;
+	top: calc(50% - 25px);
+}
+.right{
+	position: absolute;
+	right: 5px;
+	top: calc(50% - 25px);
+}
+
+.linecont{
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	border: 1px solid black;
+	border-radius: 10px 10px 0 0;
+	background-color: lightgrey;
+	position: fixed;
+	bottom: 160px;
+	left: calc(50% - 80px);
+	height: 20px;
+	width: 160px;
+}
+.lcont{
+	position: absolute;
+	top: calc(50% - 25px);
+	height: 50px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+}
+.linecont input{
+	width: calc(100% - 10px);
+	margin:0 5px;
+}
+.line{
+	border-radius: 100%;
+	width: 25px;
+	height: 25px;
+	background-color: black;
+}
+
+.red{
+	background-color: #F44336;
+}
+.green{
+	background-color: #4CAF50;
+}
+.blue{
+	background-color: #2196F3;
+}
+.yellow{
+	background-color: #FFEB3B;
+}
+.black{
+	background-color: #000000;
+}
+.white{
+	background-color: #FFFFFF;
+}

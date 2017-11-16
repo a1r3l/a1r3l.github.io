@@ -452,3 +452,48 @@ Canvas.prototype.drawOnPlane = function(e,that){
 		}
 	}
 }
+
+Canvas.prototype.changeBrushSize = function(newSize){
+	var wallone = this.scene.getObjectByName("planoone").wall;
+	var walltwo = this.scene.getObjectByName("planotwo").wall;
+	wallone.changeBrushSize(newSize);
+	walltwo.changeBrushSize(newSize);
+}
+
+Canvas.prototype.changeBrushColor = function(newColor){
+	var wallone = this.scene.getObjectByName("planoone").wall;
+	var walltwo = this.scene.getObjectByName("planotwo").wall;
+	wallone.changeBrushColor(newColor);
+	walltwo.changeBrushColor(newColor);
+}
+
+Canvas.prototype.moveCamera = function(move){
+	var camera = this.camera;
+
+	switch(move){
+
+		case "up":
+		if(camera.position.y < 100) camera.position.y +=5;
+		break;
+
+		case "down":
+		if(camera.position.y > 30) camera.position.y -=5;
+		break;
+
+		case "right":
+		if(camera.position.x < 300) camera.position.x +=5;
+		break;
+
+		case "left":
+		if(camera.position.x > -300) camera.position.x -=5;
+		break;
+
+		case "zoomin":
+		if(camera.position.z > 30) camera.position.z -=1;
+		break;
+
+		case "zoomout":
+		if(camera.position.z < 200) camera.position.z +=1;
+		break;
+	}
+}
